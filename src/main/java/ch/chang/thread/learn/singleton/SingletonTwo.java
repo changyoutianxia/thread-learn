@@ -1,7 +1,7 @@
 package ch.chang.thread.learn.singleton;
 
 /**
- * volatile 会保证执行在读取的时候写已经完成
+ * volatiles 会保证执行在读取的时候写已经完成
  */
 public class SingletonTwo {
     private static volatile SingletonTwo singletonTwo;

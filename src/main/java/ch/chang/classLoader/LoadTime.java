@@ -23,6 +23,29 @@ public class LoadTime {
         //不会被初始化
         //System.out.println(Parent.books);
         //Parent [] parents = new Parent[5];
+
+        /*x=0 y=1
+         *  x=0
+         *  y=0
+         *  x=x+1;
+         *  y=y+1;
+         *  x=0;
+         */
+
+        //System.out.println(Book.x);
+        //System.out.println(Book.y);
+
+        /*x=0 y=1
+         *  x=0
+         *  y=0
+         *
+         *  x=0
+         *  x=x+1;
+         *  y=y+1;
+         *
+         */
+        //System.out.println(Toy.x);
+        //System.out.println(Toy.y);
     }
 }
 
@@ -44,4 +67,28 @@ class Child extends Parent {
     static {
         System.out.println("child init");
     }
+}
+
+class Book {
+    public static Book book = new Book();
+    public static int x = 0;
+    public static int y;
+
+    public Book() {
+        x++;
+        y++;
+    }
+}
+
+class Toy {
+
+    public static int x = 0;
+    public static int y;
+    public static Toy toy = new Toy();
+
+    public Toy() {
+        x++;
+        y++;
+    }
+
 }

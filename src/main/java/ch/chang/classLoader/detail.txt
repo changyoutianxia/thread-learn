@@ -108,6 +108,11 @@ classLoader
         3、首先会执行父类的<clinit>()方法，然后在执行子类的
         4、<clinit> 虚拟机保证了线程安全
 
+classLoader 加载
+
+            BootstrapClassLoader(根加载器)                sun.boot.class.path
+            ExtClassLoader(扩展类加载器)                   java.ext.dirs
+            AppClassLoader(系统加载器)
 
 加载系统自定义类
             如果用自己写的java.lang.String 不会被系统加载，系统会检测
@@ -123,3 +128,8 @@ classLoader
             该类的ClassLoader被回收
             该类的Class对象没有任何地方被引用
             GC时机不可控，同样对Class的卸载也不可控
+上下文加载器
+
+            可以进行设置上下文加载器，用来打破双亲委托机制；
+            classLoader,指定ClassLoader
+             aClass =  Class.forName(driver.getClass().getName(), true, classLoader);

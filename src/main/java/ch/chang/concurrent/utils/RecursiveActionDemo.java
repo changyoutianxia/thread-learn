@@ -18,7 +18,6 @@ public class RecursiveActionDemo {
         try {
             forkJoinPool.awaitTermination(15, TimeUnit.SECONDS);
             System.out.println(total);
-            ;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,9 +1,15 @@
 package ch.chang.executor;
 
+import javafx.util.Callback;
+import jdk.management.resource.ResourceId;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 public class ExecutorsDemo {
     /**
@@ -86,7 +92,6 @@ public class ExecutorsDemo {
     }
 
     /**
-     *
      * 固定大小 max=min=10
      * queue.size =Integer.max
      */
@@ -113,9 +118,9 @@ public class ExecutorsDemo {
      * 仅仅暴露了ExecutorService
      */
     @Test
-    public void newSingleThreadExecutor() {
+    public void newSingleThreadExecutor() throws InterruptedException {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        IntStream.rangeClosed(0, 20).forEach(i ->
+        IntStream.rangeClosed(0, 10).forEach(i ->
                 executorService.submit(() -> {
                     try {
                         System.out.println(Thread.currentThread().getName() + " start");
@@ -126,7 +131,34 @@ public class ExecutorsDemo {
                     System.out.println(Thread.currentThread().getName() + " end");
                 })
         );
+        Thread.currentThread().join();
+    }
 
+    @Test
+    public void newWorkStealingPool() throws InterruptedException {
+        Optional.ofNullable(Runtime.getRuntime().availableProcessors()).ifPresent(System.out::println);
+        ExecutorService executorService = Executors.newWorkStealingPool();
+        List<Future<String>> futures = executorService.invokeAll(
+                IntStream.rangeClosed(0, 20).boxed().map(i -> (Callable<String>) () -> {
+                    System.out.println("ThreadName:" + Thread.currentThread().getName());
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return "Task-" + i;
+                }).collect(toList())
+        );
+        futures.stream().map(stringFuture -> {
+            try {
+                return stringFuture.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).forEach(System.out::println);
     }
 
     private void printInfo(ThreadPoolExecutor executorService) {
